@@ -6,6 +6,7 @@ import numpy as np
 import math
 from matplotlib.widgets import Slider, Button
 from dataReader import DataReader
+from polyRemove import PolyRemove
 
 dataFrame = DataReader("SPY", 
             datetime(2016, 1, 1), 
@@ -46,25 +47,13 @@ amp_slider.on_changed(update)
 
 #############################
 # Data plot
-
-def arrayFromPoly(poly, size, start=0):
-    array = np.array([])
-    for i in range(size):
-        # print(poly(i+math.floor(start)))
-        array = np.append(array, [poly(i+math.floor(start))])
-    print(array)
-    return array
-    
-
-
-plt.figure(figsize=(10,10))
+# plt.figure(figsize=(10,10))
 x = mdates.date2num(dataFrame.data.index)
-z = np.polyfit(x, closePrices, 1)
-p = np.poly1d(z)
-polyArray = arrayFromPoly(p, len(x), x[0])
-print("Poly Plot", len(x), x[0], len(closePrices), len(polyArray))
+
+polyArray = PolyRemove(x, closePrices, 1).data
 plt.plot(x, closePrices, label="close")
 plt.plot(x, polyArray, label="poly")
+plt.plot(x, closePrices-polyArray, label="normalized")
 plt.legend()
 
 plt.show()
