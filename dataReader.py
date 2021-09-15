@@ -1,6 +1,9 @@
 import pickle
 from iexfinance.stocks import Stock
 from iexfinance.stocks import get_historical_data
+import os
+
+os.environ['IEX_TOKEN'] = 'pk_759aa8b5072941d492b68473dc97224c '
 
 class DataReader:
     def __init__(self, symbol, start, end):

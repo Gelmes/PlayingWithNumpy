@@ -9,7 +9,7 @@ from dataReader import DataReader
 from polyRemove import PolyRemove
 
 dataFrame = DataReader("SPY", 
-            datetime(2016, 1, 1), 
+            datetime(2019, 1, 1), 
             datetime(2021, 9, 13))
 
 closePrices = dataFrame.data['close'].to_numpy(dtype=float)
@@ -53,12 +53,12 @@ amp_slider.on_changed(update)
 
 #############################
 # Data plot
-# plt.figure(figsize=(10,10))
+plt.figure(figsize=(10,10))
 
-# plt.plot(x, closePrices, label="close")
-# plt.plot(x, polyArray, label="poly")
-# plt.plot(x, closePrices-polyArray, label="normalized")
-# plt.legend()
+plt.plot(x, closePrices, label="close")
+plt.plot(x, polyArray, label="poly")
+plt.plot(x, closePrices-polyArray, label="normalized")
+plt.legend()
 
 plt.show()
 quit()
