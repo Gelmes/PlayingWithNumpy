@@ -7,6 +7,7 @@ import math
 from matplotlib.widgets import Slider, Button
 from dataReader import DataReader
 from polyRemove import PolyRemove
+from sma import SMA
 
 dataFrame = DataReader("SPY", 
             datetime(2019, 1, 1), 
@@ -14,11 +15,11 @@ dataFrame = DataReader("SPY",
 
 closePrices = dataFrame.data['close'].to_numpy(dtype=float)
 x = mdates.date2num(dataFrame.data.index)
-polyArray = PolyRemove(x, closePrices, 1).data
+pricesPolyFiltered = PolyRemove(x, closePrices, 1).data
+pricesSMA = SMA(pricesPolyFiltered,3).data
 
 
-dataArray = polyArray
-print(closePrices.size, polyArray.size)
+dataArray = pricesSMA
 
 width = 16
 size = dataArray.size
@@ -44,7 +45,6 @@ def update(val):
     width = math.floor(val)
     size = dataArray.size
     remainder = math.floor(size / width)
-    print(width, remainder)
     copy = dataArray[0:remainder*width].reshape(width, remainder)
     myImage.set_data(copy)
     # draw()
@@ -56,8 +56,8 @@ amp_slider.on_changed(update)
 plt.figure(figsize=(10,10))
 
 plt.plot(x, closePrices, label="close")
-plt.plot(x, polyArray, label="poly")
-plt.plot(x, closePrices-polyArray, label="normalized")
+plt.plot(x, pricesPolyFiltered, label="poly")
+plt.plot(x, pricesSMA, label="poly sma")
 plt.legend()
 
 plt.show()
