@@ -6,5 +6,4 @@ class SMA:
             self.dataFrame = data
         else:
             self.dataFrame = pd.DataFrame(data)
-        print(type(self.dataFrame))
         self.data = self.dataFrame.rolling(window=window).mean().values

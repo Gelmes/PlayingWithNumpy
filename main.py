@@ -1,13 +1,15 @@
-import pandas as pd
+
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import numpy as np
 import math
-from matplotlib.widgets import Slider, Button
+from matplotlib.widgets import Slider
 from dataReader import DataReader
 from polyRemove import PolyRemove
+from expRemove import ExpRemove
 from sma import SMA
+from normalize import Normal
+from multiPolyRemove import MultiPolyRemove
 
 dataFrame = DataReader("SPY", 
             datetime(2019, 1, 1), 
@@ -15,8 +17,13 @@ dataFrame = DataReader("SPY",
 
 closePrices = dataFrame.data['close'].to_numpy(dtype=float)
 x = mdates.date2num(dataFrame.data.index)
-pricesPolyFiltered = PolyRemove(x, closePrices, 1).data
-pricesSMA = SMA(pricesPolyFiltered,3).data
+multiPolyRemove = MultiPolyRemove(x, closePrices, samples=10)
+pricesPolyFiltered = PolyRemove(x, closePrices, 2)
+pricesPolyFiltered2 = PolyRemove(x, pricesPolyFiltered.data, 2)
+pricesPolyFiltered3 = PolyRemove(x, pricesPolyFiltered2.data, 2)
+# pricesExpFiltered = ExpRemove(x, closePrices, 1)
+pricesSMA = SMA(multiPolyRemove.data,3).data
+normal = Normal(pricesPolyFiltered.data).data
 
 
 dataArray = pricesSMA
@@ -56,8 +63,15 @@ amp_slider.on_changed(update)
 plt.figure(figsize=(10,10))
 
 plt.plot(x, closePrices, label="close")
-plt.plot(x, pricesPolyFiltered, label="poly")
+plt.plot(x, pricesPolyFiltered.array, label="poly")
+plt.plot(x, pricesPolyFiltered2.array, label="poly2")
+plt.plot(x, pricesPolyFiltered3.array, label="poly3")
+plt.plot(x, multiPolyRemove.data, label="multi")
 plt.plot(x, pricesSMA, label="poly sma")
+plt.legend()
+
+plt.figure(figsize=(10,10))
+plt.plot(x, normal, label="normal")
 plt.legend()
 
 plt.show()
