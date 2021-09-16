@@ -11,7 +11,7 @@ from sma import SMA
 from normalize import Normal
 from multiPolyRemove import MultiPolyRemove
 
-dataFrame = DataReader("SPY", 
+dataFrame = DataReader("DIS", 
             datetime(2019, 1, 1), 
             datetime(2021, 9, 13))
 

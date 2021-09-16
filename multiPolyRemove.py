@@ -11,4 +11,4 @@ class MultiPolyRemove:
         #     self.dataFrame = pd.DataFrame(data)
         self.data = data
         for i in range(samples):
-            self.data =  PolyRemove(x, self.data, 2).data
+            self.data =  PolyRemove(x, self.data, order).data
